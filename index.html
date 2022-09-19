@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <title>Cekbok</title>
+    <meta name="description" content="Convert Your List to 'Check-able' List." />
+    <meta charset="UTF-8" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+
+  <body>
+    <main class="flex flex-col min-h-screen gap-4 p-4" x-data="app">
+      <div id="in" class="w-full flex flex-col" :class="openEditor ? 'grow' : ''">
+        <div :class="openEditor ? 'rounded-tl rounded-tr' : 'rounded'" class="head bg-gray-800 text-white font-bold uppercase flex items-center">
+          <div class="grow p-3">
+            <p>Editor</p>
+          </div>
+          <div class="actions mr-2">
+            <button class="bg-gray-600 p-1 px-2 rounded hover:bg-gray-700" x-on:click="openEditor = ! openEditor" x-text="openEditor ? 'Hide' : 'Show'">minimize</button>
+          </div>
+        </div>
+        <div class="body relative grow" x-show="openEditor">
+          <textarea name="input-text" id="input-text" class="bg-gray-200 absolute resize-none inset-0 p-3 rounded-bl rounded-br border-0 focus:border-0 focus:ring-0" x-model="text" x-effect="toList(text)" placeholder="Paste list here..."></textarea>
+        </div>
+      </div>
+      <div id="out" class="w-full grow flex flex-col">
+        <div class="head p-3 rounded-tl rounded-tr bg-gray-800 text-white font-bold uppercase">
+          <p>
+            Checkbox
+          </p>
+        </div>
+        <div class="body relative grow">
+          <div name="output-list" id="output-list" class="overflow-y-auto bg-gray-300 absolute resize-none inset-0 p-3 rounded-bl rounded-br flex flex-col gap-2">
+            <template x-for="item in listItems">
+              <label class="inline-flex items-center bg-gray-100 w-full p-2 pl-3 rounded cursor-pointer hover:bg-gray-50 hover:shadow">
+                <input type="checkbox" class="rounded bg-gray-200 border-transparent focus:border-transparent focus:bg-gray-200 text-gray-700 focus:ring-1 focus:ring-offset-2 focus:ring-gray-500" />
+                <span class="ml-2" x-text="item"></span>
+              </label>
+            </template>
+          </div>
+        </div>
+      </div>
+      <div class="footer text-center text-sm rounded bg-gray-100 p-3" title="19 Sep 2022, 22:32 GMT+7">
+        created with
+        <span class="text-red-600">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="inline" viewBox="0 0 16 16">
+            <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1z" />
+          </svg>
+        </span>
+        by
+        <span class="text-red-600"><a href="https://afarhansib.github.io/">afarhansib</a></span>
+      </div>
+    </main>
+
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script>
+      document.addEventListener("alpine:init", () => {
+        Alpine.data("app", () => ({
+          openEditor: true,
+          text: "",
+          listItems: [],
+          toList() {
+            this.listItems = this.text.split(/\r?\n/).map((e) => {
+              return e.replace(/\s/g, "").length === 0 ? " " : e;
+            });
+          }
+        }));
+      });
+    </script>
+  </body>
+</html>
